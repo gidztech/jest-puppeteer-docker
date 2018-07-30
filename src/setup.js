@@ -8,7 +8,7 @@ module.exports = async () => {
     console.log('\n');
 
     // launch Chrome in Docker ready for the first test suite
-    const endpointPath = path.join(__dirname, 'wsEndpoint');
+    const endpointPath = path.join(__dirname, '../', 'wsEndpoint');
     const webSocketUri = await dockerRunChrome();
     fs.writeFileSync(endpointPath, webSocketUri);
 

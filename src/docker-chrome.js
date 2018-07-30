@@ -1,28 +1,13 @@
 const path = require('path');
 const request = require('request-promise-native');
 const syncRequest = require('sync-request');
-const { promisify } = require('util');
 const { readFileSync, writeFileSync } = require('fs');
-const exec = promisify(require('child_process').exec);
+const { runCommand } = require('./utils');
 
 require('colors');
 
-const CONSOLE_PREFIX = 'Jest Puppeteer:';
-const composePath = path.join(__dirname, './docker-compose.yml');
-
-const runCommand = async (command, args) => {
-    try {
-        const { stdout, stderr } = await exec(`${command} ${args.join(' ')}`);
-
-        console.log(stdout);
-        console.log(stderr);
-
-        return stdout;
-    } catch (e) {
-        console.error(e);
-        return e;
-    }
-};
+const CONSOLE_PREFIX = 'Jest Puppeteer Docker:';
+const composePath = path.join(__dirname, '../docker-compose.yml');
 
 const dockerBuild = async () => {
     try {

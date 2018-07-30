@@ -9,6 +9,6 @@ module.exports = async function globalTeardown() {
     await dockerShutdownChrome();
 
     // delete websocket from file for next time we run test suites
-    const endpointPath = path.join(__dirname, 'wsEndpoint');
+    const endpointPath = path.join(__dirname, '../', 'wsEndpoint');
     fs.writeFileSync(endpointPath, '');
 };
