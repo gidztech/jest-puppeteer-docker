@@ -1,3 +1,3 @@
-FROM alpeware/chrome-headless-stable:ver-68.0.3440.75
+FROM alpeware/chrome-headless-trunk:rev-579149
 EXPOSE 9222
 LABEL maintainer="info@alpeware.com"

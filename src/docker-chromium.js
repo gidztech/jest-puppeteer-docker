@@ -2,11 +2,10 @@ const path = require('path');
 const request = require('request-promise-native');
 const syncRequest = require('sync-request');
 const { readFileSync, writeFileSync } = require('fs');
-const { runCommand } = require('./utils');
+const { CONSOLE_PREFIX, runCommand } = require('./utils');
 
 require('colors');
 
-const CONSOLE_PREFIX = 'Jest Puppeteer Docker:';
 const composePath = path.join(__dirname, '../docker-compose.yml');
 
 const dockerBuild = async () => {
@@ -64,9 +63,9 @@ const dockerDown = async () => {
     }
 };
 
-const contactChrome = async ({ config, maxAttempts }) => {
+const contactChromium = async ({ config, maxAttempts }) => {
     let count = 1;
-    console.log(`${CONSOLE_PREFIX} Contacting Chrome in container...`.green);
+    console.log(`${CONSOLE_PREFIX} Contacting Chromium in container...`.green);
 
     async function tryRequest() {
         try {
@@ -94,16 +93,17 @@ const contactChrome = async ({ config, maxAttempts }) => {
     return tryRequest();
 };
 
-const dockerUpdateChrome = version => {
-    const dockerFilePath = './chrome/Dockerfile';
+const dockerUpdateChromium = revision => {
+    const dockerFilePath = path.join(__dirname, '../Dockerfile');
+
     let latestTag = '';
 
-    if (version) {
-        latestTag = `ver-${version}`;
+    if (revision) {
+        latestTag = `rev-${revision}`;
     } else {
         const res = syncRequest(
             'GET',
-            'https://hub.docker.com/v2/repositories/alpeware/chrome-headless-stable/tags/'
+            'https://hub.docker.com/v2/repositories/alpeware/chrome-headless-trunk/tags/'
         );
 
         const body = JSON.parse(res.getBody('utf8'));
@@ -130,7 +130,7 @@ const dockerRun = async () => {
     await dockerBuild();
     await dockerUp();
 
-    const res = await contactChrome({
+    const res = await contactChromium({
         config: {
             uri: `http://localhost:9222/json/version`,
             json: true,
@@ -156,6 +156,6 @@ const dockerRun = async () => {
 
 module.exports = {
     dockerShutdownChrome: dockerDown,
-    dockerRunChrome: dockerRun,
-    dockerUpdateChrome
+    dockerRunChromium: dockerRun,
+    dockerUpdateChromium
 };

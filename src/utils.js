@@ -16,5 +16,6 @@ module.exports = {
             console.error(e);
             return e;
         }
-    }
+    },
+    CONSOLE_PREFIX: 'Jest Puppeteer Docker:'
 };

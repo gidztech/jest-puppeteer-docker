@@ -1,6 +1,6 @@
 version: '3'
 services:
-  chrome:
+  chromium:
     build: ./
     shm_size: '1gb'
     cap_add:

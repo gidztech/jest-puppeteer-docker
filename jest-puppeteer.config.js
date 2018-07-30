@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 
 async function getConfig() {
-    // use the existing Chrome websocket for tests
+    // use the existing Chromium websocket for tests
     const endpointPath = path.join(__dirname, 'wsEndpoint');
     const wsEndpoint = fs.readFileSync(endpointPath, 'utf8');
 
