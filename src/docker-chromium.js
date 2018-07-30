@@ -155,7 +155,7 @@ const dockerRun = async () => {
 };
 
 module.exports = {
-    dockerShutdownChrome: dockerDown,
+    dockerShutdownChromium: dockerDown,
     dockerRunChromium: dockerRun,
     dockerUpdateChromium
 };
