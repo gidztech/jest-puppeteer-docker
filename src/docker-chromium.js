@@ -144,13 +144,6 @@ const dockerRun = async () => {
         `${CONSOLE_PREFIX} Connected to WebSocket URL: ${webSocketUri}`.green
     );
 
-    if (process.send) {
-        process.send({
-            tag: 'STDOUT_HOOK_WS',
-            value: webSocketUri
-        });
-    }
-
     return webSocketUri;
 };
 
