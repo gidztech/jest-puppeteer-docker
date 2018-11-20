@@ -1,11 +1,25 @@
 const { setup: setupPuppeteer } = require('jest-environment-puppeteer');
 const path = require('path');
 const fs = require('fs');
+const findNodeModules = require('find-node-modules');
+const nodeModulePaths = findNodeModules({ relative: false });
 const {
     dockerUpdateChromium,
     dockerRunChromium
 } = require('./docker-chromium');
 const { CONSOLE_PREFIX } = require('./utils');
+
+const getPackagePath = p => {
+    return path.join(p, 'puppeteer', 'package.json');
+};
+
+const puppeteerConfigPath = getPackagePath(
+    nodeModulePaths.find(p => {
+        const pathToTest = getPackagePath(p);
+        return fs.existsSync(pathToTest);
+    })
+);
+
 require('colors');
 
 module.exports = async () => {
@@ -14,8 +28,7 @@ module.exports = async () => {
     const revision =
         process.env.PUPPETEER_CHROMIUM_REVISION ||
         process.env.npm_config_puppeteer_chromium_revision ||
-        require(path.resolve('./node_modules/puppeteer/package.json')).puppeteer
-            .chromium_revision;
+        require(path.resolve(puppeteerConfigPath)).puppeteer.chromium_revision;
 
     // set the version of Chromium to use based on Puppeteer
     console.log(
