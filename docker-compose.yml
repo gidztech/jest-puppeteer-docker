@@ -3,7 +3,6 @@ services:
   chromium:
     build: ./
     shm_size: '1gb'
-    cap_add:
-      - SYS_ADMIN
+    cap_add: ['NET_ADMIN', 'NET_RAW']
     ports:
       - '9222:9222'
