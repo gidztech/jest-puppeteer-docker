@@ -7,10 +7,17 @@ const {
     dockerUpdateChromium,
     dockerRunChromium
 } = require('./docker-chromium');
+
+require('colors');
+
 const { CONSOLE_PREFIX } = require('./utils');
 
 const getPackagePath = p => {
     return path.join(p, 'puppeteer', 'package.json');
+};
+
+const getConfigPath = p => {
+    return path.join(p, 'jest-puppeteer-docker', 'jest-puppeteer.config.js');
 };
 
 const puppeteerConfigPath = getPackagePath(
@@ -20,7 +27,12 @@ const puppeteerConfigPath = getPackagePath(
     })
 );
 
-require('colors');
+process.env.JEST_PUPPETEER_CONFIG = getConfigPath(
+    nodeModulePaths.find(p => {
+        const pathToTest = getConfigPath(p);
+        return fs.existsSync(pathToTest);
+    })
+);
 
 module.exports = async () => {
     console.log('\n');
