@@ -1,5 +1,6 @@
 # jest-puppeteer-docker
 **Jest plugin that allows you to run your Jest tests against a Chrome instance running in Docker.**
+[![Build Status](https://travis-ci.org/gidztech/jest-puppeteer-docker.svg?branch=master)](https://travis-ci.org/gidztech/jest-puppeteer-docker)
 
 [Muppeteer](https://github.com/HuddleEng/Muppeteer) allows you to run your Mocha tests against a Chrome instance running in Docker with little Docker config and setup/teardown code. It's used to support cross-environmental Visual Regression Testing. I want to provide the same capability to Jest, but using a plugin based architecture.
 

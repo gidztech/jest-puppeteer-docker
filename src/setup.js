@@ -16,7 +16,7 @@ const getPackagePath = p => {
     return path.join(p, 'puppeteer', 'package.json');
 };
 
-const getConfigPath = p => {
+const getFullConfigPath = p => {
     return path.join(p, 'jest-puppeteer-docker', 'jest-puppeteer.config.js');
 };
 
@@ -27,12 +27,17 @@ const puppeteerConfigPath = getPackagePath(
     })
 );
 
-process.env.JEST_PUPPETEER_CONFIG = getConfigPath(
-    nodeModulePaths.find(p => {
-        const pathToTest = getConfigPath(p);
-        return fs.existsSync(pathToTest);
-    })
-);
+const foundPath = nodeModulePaths.find(p => {
+    const pathToTest = getFullConfigPath(p);
+    return fs.existsSync(pathToTest);
+});
+
+if (foundPath) {
+    process.env.JEST_PUPPETEER_CONFIG = getFullConfigPath(foundPath);
+} else {
+    // assume it's in the current repository
+    process.env.JEST_PUPPETEER_CONFIG = 'jest-puppeteer.config.js';
+}
 
 module.exports = async () => {
     console.log('\n');

@@ -1,14 +1,11 @@
 #!/bin/sh
 
-# Taken from https://github.com/bufferings/docker-access-host/blob/master/docker-entrypoint.sh
-###
 HOST_DOMAIN="host.docker.internal"
-ping -q -c1 $HOST_DOMAIN > /dev/null 2>&1
-if [ $? -ne 0 ]; then
-  HOST_IP=$(ip route | awk 'NR==1 {print $3}')
-  echo -e "$HOST_IP\t$HOST_DOMAIN" >> /etc/hosts
+DOCKER_IP="$(getent hosts host.docker.internal | cut -d' ' -f1)"
+if [ ! $DOCKER_IP ]; then
+  DOCKER_IP=$(ip -4 route show default | cut -d' ' -f3)
+  echo -e "$DOCKER_IP\t$HOST_DOMAIN" >> /etc/hosts
 fi
-###
 
 # Taken from https://github.com/alpeware/chrome-headless-trunk/blob/master/start.sh
 ###

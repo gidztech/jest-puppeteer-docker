@@ -1,4 +1,4 @@
-FROM alpeware/chrome-headless-trunk:rev-579149
+FROM alpeware/chrome-headless-trunk:rev-599821
 EXPOSE 9222
 ADD entrypoint.sh /usr/bin/
 RUN apt-get update && apt-get install -y \
