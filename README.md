@@ -1,21 +1,46 @@
 # jest-puppeteer-docker
-**Jest plugin that allows you to run your Jest tests against a Chrome instance running in Docker.**
+**Jest preset plugin that allows you to run your Jest tests against a Chrome instance running in Docker**
+
 [![Build Status](https://travis-ci.org/gidztech/jest-puppeteer-docker.svg?branch=master)](https://travis-ci.org/gidztech/jest-puppeteer-docker)
 
-[Muppeteer](https://github.com/HuddleEng/Muppeteer) allows you to run your Mocha tests against a Chrome instance running in Docker with little Docker config and setup/teardown code. It's used to support cross-environmental Visual Regression Testing. I want to provide the same capability to Jest, but using a plugin based architecture.
+```
+npm install --save-dev jest-puppeteer-docker puppeteer jest
+```
 
-## Status
-I have succesfully managed to use [jest](https://github.com/facebook/jest), [jest-puppeteer](https://github.com/smooth-code/jest-puppeteer), [jest-image-snapshot](https://github.com/americanexpress/jest-image-snapshot) and the [Docker module from Muppeteer](https://github.com/HuddleEng/Muppeteer/blob/master/src/utils/dockerChrome.js) to run my Jest tests against an instance of Chrome running in a Docker container. 
 
-This was achieved using a forked version of `jest-puppeteer` to support using an exsting Chrome instance, by providing it a web socket URI. I will be making a PR to the project shortly as it's useful in itself.
+## Prerequisites
+You will need to make sure Docker is installed on the environments you are running on. See https://docs.docker.com/install/ for instructions for installing on various platforms.
 
-That is the first step, but it requires a lot of config and utils in my project.
+[`puppeteer`](https://www.google.com/search?q=puppeteer&ie=utf-8&oe=utf-8&client=firefox-b-ab) and [`jest`](https://jestjs.io/) are also required.
 
-## Plan
-This plugin will wrap this all up. It will work with `jest-puppeteer` by doing the following things:
-1. Provide configuration to pin the version of Chrome you want (like Muppeteer)
-2. Build and launch Docker container with Chrome running on it (like Muppeteer)
-3. Pass the Chrome web socket URI to `jest-puppeteer` (once PR merged)
-4. Shutdown Docker container after test suite has completed
+## Basic Usage
 
-You can then use an image comparison plugin like `jest-image-snapshot` to do Visual Regression Testing.
+Update your Jest configuration:
+
+```json
+{
+  "preset": "jest-puppeteer-docker"
+}
+```
+
+Use Puppeteer in your tests:
+
+```js
+describe('Google', () => {
+  beforeAll(async () => {
+    await page.goto('https://google.com')
+  })
+
+  it('should display "google" text on page', async () => {
+    await expect(page).toMatch('google')
+  })
+})
+```
+When you run your tests, `jest-puppeteer-docker` will look at the version of Chromium linked to your Puppeteer version and bring up a Docker container with that version installed. Your tests will run in your host environment, but will interact with Chrome within the container via the [Chrome Debugging Protocol](https://chromedevtools.github.io/devtools-protocol/).
+
+Upon test completion, the Docker container will automatically be shutdown.
+
+## [Visual Regression Testing](https://medium.com/huddle-engineering/visual-regression-testing-ff7a1d31a112)
+The main benefit of using Docker here is to support Visual Regression Testing. Different environments may yield unexpected results with image comparisons due to anti-aliasing techniques. By providing a containerized environment, we can guarantee the environment is exactly the same everytime the tests are run.
+
+TODO: Add more content
