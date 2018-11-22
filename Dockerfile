@@ -7,5 +7,5 @@ RUN apt-get update && apt-get install -y \
     curl \
  && rm -rf /var/lib/apt/lists/*
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
-CMD ["/usr/bin/start.sh"]
+CMD ["/usr/bin/entrypoint.sh"]
 LABEL maintainer="info@alpeware.com"

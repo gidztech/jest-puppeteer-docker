@@ -8,11 +8,11 @@ if [ $? -ne 0 ]; then
   ping -q -c1 $DOCKER_IP > /dev/null 2>&1
   if [ $? -eq 0 ]; then
       # Default interface was good so patch hosts
-      echo -e $DOCKER_IP '\thost.docker.internal' >> /etc/hosts
+      echo -e $DOCKER_IP "\t$HOST_DOMAIN" >> /etc/hosts
   else 
       # Try eth0 instead and then patch hosts
       DOCKER_IP="$(ip addr show eth0 | grep 'inet ' | awk '{ print $2}' | cut -d'/' -f1)"
-      echo -e $DOCKER_IP '\thost.docker.internal' >> /etc/hosts
+      echo -e $DOCKER_IP "\t$HOST_DOMAIN" >> /etc/hosts
   fi  
 fi
 
