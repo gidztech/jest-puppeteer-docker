@@ -6,7 +6,7 @@ if [ $? -ne 0 ]; then
   # Try using default interface
   DOCKER_IP="$(ip -4 route show default | cut -d' ' -f3)"
   ping -q -c1 $DOCKER_IP > /dev/null 2>&1
-  if [ $? -e 0 ]; then
+  if [ $? -eq 0 ]; then
       # Default interface was good so patch hosts
       echo -e $DOCKER_IP '\thost.docker.internal' >> /etc/hosts
   else 
