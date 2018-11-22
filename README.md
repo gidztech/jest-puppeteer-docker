@@ -1,13 +1,17 @@
 # jest-puppeteer-docker
 
 [![Build Status](https://travis-ci.org/gidztech/jest-puppeteer-docker.svg?branch=master)](https://travis-ci.org/gidztech/jest-puppeteer-docker)
-**Jest preset plugin that allows you to run your Jest tests against a Chrome instance running in Docker**
+**Jest preset plugin that allows you to run your tests against a Chromium instance running in Docker**
 
-## Prerequisites
-You will need to make sure Docker is installed on the environments you are running on. \
-See https://docs.docker.com/install/ for instructions for installing on various platforms.
+## Installation
 
-[`puppeteer`](https://www.google.com/search?q=puppeteer&ie=utf-8&oe=utf-8&client=firefox-b-ab) and [`jest`](https://jestjs.io/) are also required.
+**Requirements:**
+- [`Docker`](https://docs.docker.com/install/)
+- [`Puppeteer`](https://github.com/GoogleChrome/puppeteer)
+- [`Jest`](https://jestjs.io/)
+
+**Optional:**
+- [`jest-image-snapshot`](https://github.com/americanexpress/jest-image-snapshot)
 
 ```
 npm install --save-dev jest-puppeteer-docker puppeteer jest
@@ -38,12 +42,24 @@ describe('Google', () => {
 ```
 
 ## How it works
-When you run your tests, `jest-puppeteer-docker` will look at the version number of Chromium associated with the Puppeteer dependency in your project, and bring up a Docker container with that version of Chromium installed on it. The tests will run in your host environment, but will interact with Chromium running within the container via the [Chrome Debugging Protocol](https://chromedevtools.github.io/devtools-protocol/).
+`jest-puppeteer-docker` will pull down a Docker image with Chromium installed with the version matching the one associated with the Puppeter dependency in your project. 
+
+When you run your tests, the container is started and `jest-puppeteer-docker` will connect to the Chromium instance within the container via the [Chrome Debugging Protocol](https://chromedevtools.github.io/devtools-protocol/). Your browser navigation and interactions will be performed in the container, while the test themselves are executed in your host environment.
 
 Once the tests finish running, the Docker container will automatically be shutdown.
 
+## Accessing Host
+If you are running a web server on your host environment, you should be able to access it from the browser in the container at `host.docker.internal`. 
+
+For example, if you have a server running at `http://localhost:3000`, you can do the following in your test:
+
+```js
+await page.goto('http://host.docker.internal:3000/my-page')
+```
+If for any reason this doesn't work for you, please [create an issue](https://github.com/gidztech/jest-puppeteer-docker/issues/new).
+
 ## Visual Regression Testing
-The main benefit of using Docker here is to support [Visual Regression Testing](https://medium.com/huddle-engineering/visual-regression-testing-ff7a1d31a112). Without Docker, different environments may yield unexpected results with image comparisons due to anti-aliasing techniques. By providing a containerized environment, we can guarantee that the images produced are always the same.
+The main benefit of using Docker here is to support [Visual Regression Testing](https://medium.com/huddle-engineering/visual-regression-testing-ff7a1d31a112). Without Docker, different environments may yield unexpected results with image comparisons, due to anti-aliasing techniques. By providing a containerized environment, we can guarantee that the images produced are always the same.
 
 ### Example Test
 [`jest-image-snapshot`](https://github.com/americanexpress/jest-image-snapshot) is a plugin that you can install, which will compare a screenshot with a baseline image that was previously generated when the test executed for the first time.
