@@ -6,4 +6,3 @@ services:
     cap_add: ['NET_ADMIN', 'NET_RAW']
     ports:
       - '9222:9222'
-    network_mode: host
