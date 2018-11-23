@@ -15,6 +15,8 @@
 **Optional:**
 - [`jest-image-snapshot`](https://github.com/americanexpress/jest-image-snapshot)
 
+This plugin uses [`jest-puppeteer`](https://github.com/smooth-code/jest-puppeteer), an awesome plugin created by the developers at [Smooth Code](https://www.smooth-code.com/), for using Puppeteer in your tests. If you are not doing Visual Regression Testing, you may want to use that plugin directly instead. 
+
 ```
 npm install --save-dev jest-puppeteer-docker puppeteer jest
 ```
