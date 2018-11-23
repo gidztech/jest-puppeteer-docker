@@ -44,7 +44,7 @@ describe('Google', () => {
 ```
 
 ## How it works
-`jest-puppeteer-docker` will pull down a Docker image with Chromium installed with the version matching the one associated with the Puppeter dependency in your project. 
+`jest-puppeteer-docker` will pull down a Docker image with Chromium installed with the version matching the one associated with the Puppeteer dependency in your project. 
 
 When you run your tests, the container is started and `jest-puppeteer-docker` will connect to the Chromium instance within the container via the [Chrome Debugging Protocol](https://chromedevtools.github.io/devtools-protocol/). Your browser navigation and interactions will be performed in the container, while the test themselves are executed in your host environment.
 
@@ -61,6 +61,8 @@ await page.goto('http://host.docker.internal:3000/my-page')
 If for any reason this doesn't work for you, please [create an issue](https://github.com/gidztech/jest-puppeteer-docker/issues/new).
 
 ## Visual Regression Testing
+📃 [**Blog post:** Visual Regression Testing](https://medium.com/huddle-engineering/visual-regression-testing-ff7a1d31a112)
+
 The main benefit of using Docker here is to support [Visual Regression Testing](https://medium.com/huddle-engineering/visual-regression-testing-ff7a1d31a112). Without Docker, different environments may yield unexpected results with image comparisons, due to anti-aliasing techniques. By providing a containerized environment, we can guarantee that the images produced are always the same.
 
 ### Example Test
