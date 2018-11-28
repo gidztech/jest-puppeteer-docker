@@ -12,31 +12,38 @@ require('colors');
 
 const { CONSOLE_PREFIX } = require('./utils');
 
-const getPackagePath = p => {
+const getFullPuppeteerConfigPath = p => {
     return path.join(p, 'puppeteer', 'package.json');
 };
 
-const getFullConfigPath = p => {
-    return path.join(p, 'jest-puppeteer-docker', 'jest-puppeteer.config.js');
-};
-
-const puppeteerConfigPath = getPackagePath(
-    nodeModulePaths.find(p => {
-        const pathToTest = getPackagePath(p);
-        return fs.existsSync(pathToTest);
-    })
-);
-
-const foundPath = nodeModulePaths.find(p => {
-    const pathToTest = getFullConfigPath(p);
+const nodeModulePathWithPuppeteerConfig = nodeModulePaths.find(p => {
+    const pathToTest = getFullPuppeteerConfigPath(p);
     return fs.existsSync(pathToTest);
 });
 
-if (foundPath) {
-    process.env.JEST_PUPPETEER_CONFIG = getFullConfigPath(foundPath);
-} else {
-    // assume it's in the current repository
-    process.env.JEST_PUPPETEER_CONFIG = 'jest-puppeteer.config.js';
+const puppeteerConfigPath = getFullPuppeteerConfigPath(
+    nodeModulePathWithPuppeteerConfig
+);
+
+// if user hasn't specified a custom jest puppeteer config path,
+// we will look for a config at their package root,
+// otherwise use default internal one
+if (!process.env.JEST_PUPPETEER_CONFIG) {
+    const rootJestPuppeteerConfigPath = path.join(
+        nodeModulePaths[0],
+        '../',
+        'jest-puppeteer.config.js'
+    );
+
+    if (fs.existsSync(rootJestPuppeteerConfigPath)) {
+        process.env.JEST_PUPPETEER_CONFIG = rootJestPuppeteerConfigPath;
+    } else {
+        process.env.JEST_PUPPETEER_CONFIG = path.join(
+            __dirname,
+            '../',
+            'jest-puppeteer.config.js'
+        );
+    }
 }
 
 module.exports = async () => {
