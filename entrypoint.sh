@@ -32,5 +32,5 @@ fi
 CHROMIUM_ADDITIONAL_ARGS=$(echo $CHROMIUM_ADDITIONAL_ARGS | tr ',' ' ')
 
 # Start Chrome
-sh -c "/usr/bin/google-chrome-unstable $CHROME_ARGS $CHROMIUM_ADDITIONAL_ARGS
+sh -c "/usr/bin/google-chrome-unstable $CHROME_ARGS $CHROMIUM_ADDITIONAL_ARGS"
 ###
