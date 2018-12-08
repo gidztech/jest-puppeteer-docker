@@ -54,6 +54,10 @@ if (chromiumArgs) {
     process.env.CHROMIUM_ADDITIONAL_ARGS = chromiumArgs;
 }
 
+// we needed chrome args property from the jest-puppeteer.config.js file but we don't want
+// jest-puppeteer to re-use this require from cache because at this point in time, we don't have the web socket written.
+delete require.cache[path.resolve(process.env.JEST_PUPPETEER_CONFIG)];
+
 module.exports = async () => {
     console.log('\n');
 
