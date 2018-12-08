@@ -46,6 +46,14 @@ if (!process.env.JEST_PUPPETEER_CONFIG) {
     }
 }
 
+const { chromiumArgs } = require(path.resolve(
+    process.env.JEST_PUPPETEER_CONFIG
+));
+
+if (chromiumArgs) {
+    process.env.CHROMIUM_ADDITIONAL_ARGS = chromiumArgs;
+}
+
 module.exports = async () => {
     console.log('\n');
 

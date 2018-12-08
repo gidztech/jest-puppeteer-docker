@@ -28,6 +28,9 @@ CHROME_ARGS="--disable-gpu --headless --no-sandbox --remote-debugging-address=$D
 if [ -n "$CHROME_OPTS" ]; then
   CHROME_ARGS="${CHROME_ARGS} ${CHROME_OPTS}"
 fi
+
+CHROMIUM_ADDITIONAL_ARGS=$(echo $CHROMIUM_ADDITIONAL_ARGS | tr ',' ' ')
+
 # Start Chrome
-sh -c "/usr/bin/google-chrome-unstable $CHROME_ARGS"
+sh -c "/usr/bin/google-chrome-unstable $CHROME_ARGS $CHROMIUM_ADDITIONAL_ARGS
 ###
