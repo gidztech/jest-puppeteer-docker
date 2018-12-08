@@ -47,6 +47,31 @@ describe('Google', () => {
 })
 ```
 
+## Jest Pupppeteer Config
+By default, Jest Puppeteer is configured by this library to connect to Chromium in the Docker container instead of launching it on the host machine. You may wish to add additional configuration, as per the [puppeteer.connect](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerconnectoptions) options. You can add a `jest-puppeteer.config.js` in your package root, or reference a custom location by setting `process.env.JEST_PUPPETEER_CONFIG`.
+
+Additionally, you can pass in [Chromium flags](https://peter.sh/experiments/chromium-command-line-switches/) to modify your launch criteria by providing a `chromiumArgs` array.
+
+**jest-puppeteer.config.js**
+
+```js
+const { getBaseConfig } = require('jest-puppeteer-docker');
+
+const baseConfig = getBaseConfig();
+const customConfig = { ...baseConfig };
+
+customConfig.connect.defaultViewport = {
+    width: 500,
+    height: 500
+}
+
+customConfig.chromiumArgs = [
+    '–ignore-certificate-errors'
+];
+
+module.exports = customConfig;
+```
+
 ## How it works
 `jest-puppeteer-docker` will pull down a Docker image with Chromium installed with the version matching the one associated with the Puppeteer dependency in your project. 
 

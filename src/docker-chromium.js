@@ -15,7 +15,10 @@ const dockerBuild = async () => {
             '-f',
             `"${composePath}"`,
             'build',
-            '--pull'
+            `--build-arg CHROMIUM_ADDITIONAL_ARGS="${process.env
+                .CHROMIUM_ADDITIONAL_ARGS || '[]'}"`,
+            '--pull',
+            'chromium'
         ]);
         console.log(`${CONSOLE_PREFIX} Successfully built Docker image`.green);
     } catch (exitCode) {
