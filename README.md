@@ -21,6 +21,8 @@ This plugin uses [`jest-puppeteer`](https://github.com/smooth-code/jest-puppetee
 npm install --save-dev jest-puppeteer-docker puppeteer jest
 ```
 
+**Note:** You should set an environment variable `PUPPETEER_SKIP_CHROMIUM_DOWNLOAD` to `true` to avoid unnecessarily downloading a local copy of Chromium, since we will be using a container.
+
 ## Basic Usage
 
 **jest.config.js**
