@@ -1,4 +1,4 @@
-FROM alpeware/chrome-headless-trunk:rev-609904
+FROM alpeware/chrome-headless-trunk:rev-599821
 EXPOSE 9222
 ARG CHROMIUM_ADDITIONAL_ARGS
 ENV CHROMIUM_ADDITIONAL_ARGS=${CHROMIUM_ADDITIONAL_ARGS}
