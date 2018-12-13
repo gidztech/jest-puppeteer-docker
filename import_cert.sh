@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Taken from https://github.com/alpeware/chrome-headless-stable
+
 # Script that listen for changes in 'certificates' subdir of 'BASEDIR'
 # and updates the NSSDB when PEM encoded certificates are updated.
 
