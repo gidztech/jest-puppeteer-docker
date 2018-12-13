@@ -21,10 +21,9 @@ const dockerBuild = async () => {
             'chromium'
         ]);
         console.log(`${CONSOLE_PREFIX} Successfully built Docker image`.green);
-    } catch (exitCode) {
-        console.error(
-            `${CONSOLE_PREFIX} (Exit code ${exitCode}) Failed to build Docker image`
-                .red
+    } catch (error) {
+        throw new Error(
+            `${CONSOLE_PREFIX} Failed to build Docker image \n\nInternal Error: \n\n${error}`
         );
     }
 };
@@ -41,10 +40,9 @@ const dockerUp = async () => {
         console.log(
             `${CONSOLE_PREFIX} Successfully started Docker container`.green
         );
-    } catch (exitCode) {
-        console.error(
-            `${CONSOLE_PREFIX} (Exit code ${exitCode}) Failed to start Docker container`
-                .red
+    } catch (error) {
+        throw new Error(
+            `${CONSOLE_PREFIX} Failed to start Docker container \n\nInternal Error: \n\n${error}`
         );
     }
 };
@@ -56,12 +54,11 @@ const dockerDown = async () => {
         );
         await runCommand('docker-compose', ['-f', `"${composePath}"`, 'down']);
         console.log(
-            `${CONSOLE_PREFIX} Successfully shutdown Docker container`.green
+            `${CONSOLE_PREFIX} Successfully shut down Docker container`.green
         );
-    } catch (exitCode) {
-        console.error(
-            `${CONSOLE_PREFIX} (Exit code ${exitCode}) Failed to shut down Docker container`
-                .red
+    } catch (error) {
+        throw new Error(
+            `${CONSOLE_PREFIX} Failed to shut down Docker container \n\nInternal Error: \n\n${error}`
         );
     }
 };
