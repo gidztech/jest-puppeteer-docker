@@ -7,8 +7,10 @@ const { CONSOLE_PREFIX, runCommand } = require('./utils');
 require('colors');
 
 const composePath = path.join(__dirname, '../docker-compose.yml');
+let serviceToBuild = 'chromium';
 
 const dockerBuild = async () => {
+    let hasTriedAlternative = false;
     try {
         console.log(`${CONSOLE_PREFIX} Building Docker image...`.green);
         await runCommand('docker-compose', [
@@ -18,13 +20,36 @@ const dockerBuild = async () => {
             `--build-arg CHROMIUM_ADDITIONAL_ARGS="${process.env
                 .CHROMIUM_ADDITIONAL_ARGS || '[]'}"`,
             '--pull',
-            'chromium'
+            serviceToBuild
         ]);
         console.log(`${CONSOLE_PREFIX} Successfully built Docker image`.green);
     } catch (error) {
-        throw new Error(
+        const unresolvedError = new Error(
             `${CONSOLE_PREFIX} Failed to build Docker image \n\nInternal Error: \n\n${error}`
         );
+
+        if (error.message.includes('failed to build')) {
+            // we will assume this error means there's either a problem with the image or it doesn't exist
+            // in this case, we will manually build the image from scratch and download Chromium (just once)
+            if (!hasTriedAlternative) {
+                hasTriedAlternative = true;
+                serviceToBuild = 'chromium_alternative';
+
+                console.log(
+                    `${CONSOLE_PREFIX} Failed to build Docker image from repository, now trying to build from scratch. This will take some time...`
+                        .red
+                );
+                return new Promise(resolve => {
+                    setTimeout(async () => {
+                        resolve(await dockerBuild());
+                    }, 500);
+                });
+            } else {
+                throw unresolvedError;
+            }
+        } else {
+            throw unresolvedError;
+        }
     }
 };
 
@@ -35,7 +60,8 @@ const dockerUp = async () => {
             '-f',
             `"${composePath}"`,
             'up',
-            '-d'
+            '-d',
+            serviceToBuild
         ]);
         console.log(
             `${CONSOLE_PREFIX} Successfully started Docker container`.green
@@ -95,6 +121,7 @@ const contactChromium = async ({ config, maxAttempts }) => {
 
 const dockerUpdateChromium = revision => {
     const dockerFilePath = path.join(__dirname, '../Dockerfile');
+    const alternativeDockerFilePath = path.join(__dirname, '../Dockerfile2');
 
     let latestTag = '';
 
@@ -120,10 +147,17 @@ const dockerUpdateChromium = revision => {
         }
     }
 
-    const data = readFileSync(dockerFilePath, { encoding: 'utf-8' });
-    const previousTag = data.match(/:(.*)/)[1]; // get everything after : on same line
-    const newData = data.replace(previousTag, latestTag);
+    // patch Dockerfile
+    let data = readFileSync(dockerFilePath, { encoding: 'utf-8' });
+    let previousTag = data.match(/:(.*)/)[1]; // get everything after : on same line
+    let newData = data.replace(previousTag, latestTag);
     writeFileSync(dockerFilePath, newData, { encoding: 'utf-8' });
+
+    // patch Dockerfile2 (alternative)
+    data = readFileSync(alternativeDockerFilePath, { encoding: 'utf-8' });
+    previousTag = data.match(/REV=(.*)/)[1]; // get everything after revision on same line
+    newData = data.replace(previousTag, latestTag.replace('rev-', ''));
+    writeFileSync(alternativeDockerFilePath, newData, { encoding: 'utf-8' });
 };
 
 const dockerRun = async () => {
