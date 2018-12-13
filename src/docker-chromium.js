@@ -1,14 +1,15 @@
 const path = require('path');
 const request = require('request-promise-native');
-const syncRequest = require('sync-request');
 const { readFileSync, writeFileSync } = require('fs');
 const { CONSOLE_PREFIX, runCommand } = require('./utils');
 
 require('colors');
 
 const composePath = path.join(__dirname, '../docker-compose.yml');
+let serviceToBuild = 'chromium';
 
 const dockerBuild = async () => {
+    let hasTriedAlternative = false;
     try {
         console.log(`${CONSOLE_PREFIX} Building Docker image...`.green);
         await runCommand('docker-compose', [
@@ -18,14 +19,36 @@ const dockerBuild = async () => {
             `--build-arg CHROMIUM_ADDITIONAL_ARGS="${process.env
                 .CHROMIUM_ADDITIONAL_ARGS || '[]'}"`,
             '--pull',
-            'chromium'
+            serviceToBuild
         ]);
         console.log(`${CONSOLE_PREFIX} Successfully built Docker image`.green);
-    } catch (exitCode) {
-        console.error(
-            `${CONSOLE_PREFIX} (Exit code ${exitCode}) Failed to build Docker image`
-                .red
+    } catch (error) {
+        const unresolvedError = new Error(
+            `${CONSOLE_PREFIX} Failed to build Docker image \n\nInternal Error: \n\n${error}`
         );
+
+        if (error.message.includes('failed to build')) {
+            // we will assume this error means there's either a problem with the image or it doesn't exist
+            // in this case, we will manually build the image from scratch and download Chromium (just once)
+            if (!hasTriedAlternative) {
+                hasTriedAlternative = true;
+                serviceToBuild = 'chromium_alternative';
+
+                console.log(
+                    `${CONSOLE_PREFIX} Failed to build Docker image from repository, now trying to build from scratch. This will take some time...`
+                        .red
+                );
+                return new Promise(resolve => {
+                    setTimeout(async () => {
+                        resolve(await dockerBuild());
+                    }, 500);
+                });
+            } else {
+                throw unresolvedError;
+            }
+        } else {
+            throw unresolvedError;
+        }
     }
 };
 
@@ -36,15 +59,15 @@ const dockerUp = async () => {
             '-f',
             `"${composePath}"`,
             'up',
-            '-d'
+            '-d',
+            serviceToBuild
         ]);
         console.log(
             `${CONSOLE_PREFIX} Successfully started Docker container`.green
         );
-    } catch (exitCode) {
-        console.error(
-            `${CONSOLE_PREFIX} (Exit code ${exitCode}) Failed to start Docker container`
-                .red
+    } catch (error) {
+        throw new Error(
+            `${CONSOLE_PREFIX} Failed to start Docker container \n\nInternal Error: \n\n${error}`
         );
     }
 };
@@ -56,12 +79,11 @@ const dockerDown = async () => {
         );
         await runCommand('docker-compose', ['-f', `"${composePath}"`, 'down']);
         console.log(
-            `${CONSOLE_PREFIX} Successfully shutdown Docker container`.green
+            `${CONSOLE_PREFIX} Successfully shut down Docker container`.green
         );
-    } catch (exitCode) {
-        console.error(
-            `${CONSOLE_PREFIX} (Exit code ${exitCode}) Failed to shut down Docker container`
-                .red
+    } catch (error) {
+        throw new Error(
+            `${CONSOLE_PREFIX} Failed to shut down Docker container \n\nInternal Error: \n\n${error}`
         );
     }
 };
@@ -98,35 +120,20 @@ const contactChromium = async ({ config, maxAttempts }) => {
 
 const dockerUpdateChromium = revision => {
     const dockerFilePath = path.join(__dirname, '../Dockerfile');
+    const alternativeDockerFilePath = path.join(__dirname, '../Dockerfile2');
+    const latestTag = `rev-${revision}`;
 
-    let latestTag = '';
-
-    if (revision) {
-        latestTag = `rev-${revision}`;
-    } else {
-        const res = syncRequest(
-            'GET',
-            'https://hub.docker.com/v2/repositories/alpeware/chrome-headless-trunk/tags/'
-        );
-
-        const body = JSON.parse(res.getBody('utf8'));
-
-        if (body && body.results && body.results.length) {
-            const { name } = body.results[0];
-
-            // sometimes 'latest' tag appears before or after the actual tag so deal with either case
-            if (name !== 'latest') {
-                latestTag = name;
-            } else {
-                latestTag = body.results[1] && body.results[1].name;
-            }
-        }
-    }
-
-    const data = readFileSync(dockerFilePath, { encoding: 'utf-8' });
-    const previousTag = data.match(/:(.*)/)[1]; // get everything after : on same line
-    const newData = data.replace(previousTag, latestTag);
+    // patch Dockerfile
+    let data = readFileSync(dockerFilePath, { encoding: 'utf-8' });
+    let previousTag = data.match(/:(.*)/)[1]; // get everything after : on same line
+    let newData = data.replace(previousTag, latestTag);
     writeFileSync(dockerFilePath, newData, { encoding: 'utf-8' });
+
+    // patch Dockerfile2 (alternative)
+    data = readFileSync(alternativeDockerFilePath, { encoding: 'utf-8' });
+    previousTag = data.match(/REV=(.*)/)[1]; // get everything after revision on same line
+    newData = data.replace(previousTag, revision);
+    writeFileSync(alternativeDockerFilePath, newData, { encoding: 'utf-8' });
 };
 
 const dockerRun = async () => {
