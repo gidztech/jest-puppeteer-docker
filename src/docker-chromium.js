@@ -1,6 +1,5 @@
 const path = require('path');
 const request = require('request-promise-native');
-const syncRequest = require('sync-request');
 const { readFileSync, writeFileSync } = require('fs');
 const { CONSOLE_PREFIX, runCommand } = require('./utils');
 
@@ -122,30 +121,7 @@ const contactChromium = async ({ config, maxAttempts }) => {
 const dockerUpdateChromium = revision => {
     const dockerFilePath = path.join(__dirname, '../Dockerfile');
     const alternativeDockerFilePath = path.join(__dirname, '../Dockerfile2');
-
-    let latestTag = '';
-
-    if (revision) {
-        latestTag = `rev-${revision}`;
-    } else {
-        const res = syncRequest(
-            'GET',
-            'https://hub.docker.com/v2/repositories/alpeware/chrome-headless-trunk/tags/'
-        );
-
-        const body = JSON.parse(res.getBody('utf8'));
-
-        if (body && body.results && body.results.length) {
-            const { name } = body.results[0];
-
-            // sometimes 'latest' tag appears before or after the actual tag so deal with either case
-            if (name !== 'latest') {
-                latestTag = name;
-            } else {
-                latestTag = body.results[1] && body.results[1].name;
-            }
-        }
-    }
+    const latestTag = `rev-${revision}`;
 
     // patch Dockerfile
     let data = readFileSync(dockerFilePath, { encoding: 'utf-8' });
@@ -156,7 +132,7 @@ const dockerUpdateChromium = revision => {
     // patch Dockerfile2 (alternative)
     data = readFileSync(alternativeDockerFilePath, { encoding: 'utf-8' });
     previousTag = data.match(/REV=(.*)/)[1]; // get everything after revision on same line
-    newData = data.replace(previousTag, latestTag.replace('rev-', ''));
+    newData = data.replace(previousTag, revision);
     writeFileSync(alternativeDockerFilePath, newData, { encoding: 'utf-8' });
 };
 
