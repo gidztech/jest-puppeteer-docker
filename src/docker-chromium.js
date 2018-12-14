@@ -5,7 +5,7 @@ const { CONSOLE_PREFIX, runCommand } = require('./utils');
 
 require('colors');
 
-const composePath = path.join(__dirname, '../docker-compose.yml');
+const composePath = path.join(__dirname, '../docker/docker-compose.yml');
 let serviceToBuild = 'chromium';
 
 const dockerBuild = async () => {
@@ -119,8 +119,11 @@ const contactChromium = async ({ config, maxAttempts }) => {
 };
 
 const dockerUpdateChromium = revision => {
-    const dockerFilePath = path.join(__dirname, '../Dockerfile');
-    const alternativeDockerFilePath = path.join(__dirname, '../Dockerfile2');
+    const dockerFilePath = path.join(__dirname, '../docker/Dockerfile');
+    const alternativeDockerFilePath = path.join(
+        __dirname,
+        '../docker/Dockerfile2'
+    );
     const latestTag = `rev-${revision}`;
 
     // patch Dockerfile
