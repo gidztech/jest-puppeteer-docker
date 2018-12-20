@@ -40,9 +40,8 @@
         "puppeteer-extensions": "^1.0.0"
     },
     "dependencies": {
-        "colors": "^1.3.2",
+        "docker-chromium": "0.0.1-alpha.1",
         "find-node-modules": "^1.0.4",
-        "jest-puppeteer": "^3.4.0",
-        "request-promise-native": "^1.0.5"
+        "jest-puppeteer": "^3.4.0"
     }
 }

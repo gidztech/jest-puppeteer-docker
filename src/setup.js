@@ -4,13 +4,9 @@ const fs = require('fs');
 const findNodeModules = require('find-node-modules');
 const nodeModulePaths = findNodeModules({ relative: false });
 const {
-    dockerUpdateChromium,
+    dockerSetChromiumConfig,
     dockerRunChromium
-} = require('./docker-chromium');
-
-require('colors');
-
-const { CONSOLE_PREFIX } = require('./utils');
+} = require('docker-chromium');
 
 const getFullPuppeteerConfigPath = p => {
     return path.join(p, 'puppeteer', 'package.json');
@@ -46,13 +42,9 @@ if (!process.env.JEST_PUPPETEER_CONFIG) {
     }
 }
 
-const { chromiumArgs } = require(path.resolve(
+const { chromiumFlags } = require(path.resolve(
     process.env.JEST_PUPPETEER_CONFIG
 ));
-
-if (chromiumArgs) {
-    process.env.CHROMIUM_ADDITIONAL_ARGS = chromiumArgs;
-}
 
 // we needed chrome args property from the jest-puppeteer.config.js file but we don't want
 // jest-puppeteer to re-use this require from cache because at this point in time, we don't have the web socket written.
@@ -67,11 +59,7 @@ module.exports = async () => {
         require(path.resolve(puppeteerConfigPath)).puppeteer.chromium_revision;
 
     // set the version of Chromium to use based on Puppeteer
-    console.log(
-        `${CONSOLE_PREFIX} Setting Chromium version to rev-${revision}...`.green
-    );
-
-    dockerUpdateChromium(revision);
+    await dockerSetChromiumConfig({ revision, flags: chromiumFlags });
 
     // launch Chromium in Docker ready for the first test suite
     const endpointPath = path.join(__dirname, '../', 'wsEndpoint');
