@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const { teardown: teardownPuppeteer } = require('jest-environment-puppeteer');
-const { dockerShutdownChromium } = require('./docker-chromium');
+const { dockerShutdownChromium } = require('docker-chromium');
 
 module.exports = async function globalTeardown() {
     await teardownPuppeteer();
