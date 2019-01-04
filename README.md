@@ -55,21 +55,20 @@ Additionally, you can pass in [Chromium flags](https://peter.sh/experiments/chro
 **jest-puppeteer.config.js**
 
 ```js
-const { getBaseConfig } = require('jest-puppeteer-docker');
+const getConfig = require('jest-puppeteer-docker/config');
 
-const baseConfig = getBaseConfig();
-const customConfig = { ...baseConfig };
+const baseConfig = getConfig();
+const customConfig = Object.assign({}, baseConfig);
 
 customConfig.connect.defaultViewport = {
     width: 500,
     height: 500
-}
+};
 
-customConfig.chromiumFlags = [
-    '–ignore-certificate-errors'
-];
+customConfig.chromiumFlags = ['–ignore-certificate-errors'];
 
 module.exports = customConfig;
+
 ```
 
 ## How it works
