@@ -1,6 +1,6 @@
 {
     "name": "jest-puppeteer-docker",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "Jest plugin that allows you to run your Jest tests against a Chrome instance running in Docker.",
     "main": "lib/index.js",
     "scripts": {
