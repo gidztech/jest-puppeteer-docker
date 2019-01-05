@@ -1,17 +1,18 @@
-
 sudo: required
 language: node_js
 node_js:
-- node
+    - node
 services:
-- docker
+    - docker
 env:
-  global:
-    - DISABLE_SANDBOX=true
-    - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-    - secure: AnKIr3J+L/XJxv4MEgKsZg1CQGWvXnb5Kee85IN5kIg/PkAl8tGVq9d4Slk2bcjekY2AxPDEYSedXuXmJC57Dk/4SA3g1BEujJdx5wb2t0TN73zk9nqbxnbft5czCh2q+474IpsDxZ332LLxKYNFREuuVwk91K1Iph4A/N4uK7RTWNBtmcNlCGiTXTdTzB2nKuDIaU8qH+OkPcnbiNODXkwG9xOIHVm0lA3ndNYnjYcEKnJVEE9y9E1mhX4Mx+cNziQndkjgfK9UyRJstvuC8QTKtFZfuvOSIgzc1rouUDfiLUTMDnLzKmkJkxdnLmD0xkL/JTHuDlhIbTcD9pR4a4reXHSXXvY5jH5R47HfL73GBWFWvHhTy/IJ8rOdiuVI2ne4tn9bIG6B0wYKuizMT0HylEDofnROjF62WW1XQbeEn/9dXGTUdbM2/QuHYMoZJV6cRKOEg2olMND3KoMFcX77r2upTdnGLU+sg1dDIDbrzvLriLdHvlmO2M1MajEvooTZYAKSPo9zz1NuwmZzNVIZ2eVEHHT9h9KeZax5HRS1pFl2ZL0QaNFDp0mf1JHpRChHxkdvzdNvBBcXVEuEUA76w205LPglMmGg4+G7ydIcBkVCBatzlMkhKqsAkfdyG9+1ZMhwqzkFvjUooOQwbspn3nrRig/QUQDlYfpMz+E=
-jobs:  
-  include:
-    - stage: "Tests"
-      name: "Example"
-      script: npm run test
+    global:
+        - DISABLE_SANDBOX=true
+        - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+        - secure: AnKIr3J+L/XJxv4MEgKsZg1CQGWvXnb5Kee85IN5kIg/PkAl8tGVq9d4Slk2bcjekY2AxPDEYSedXuXmJC57Dk/4SA3g1BEujJdx5wb2t0TN73zk9nqbxnbft5czCh2q+474IpsDxZ332LLxKYNFREuuVwk91K1Iph4A/N4uK7RTWNBtmcNlCGiTXTdTzB2nKuDIaU8qH+OkPcnbiNODXkwG9xOIHVm0lA3ndNYnjYcEKnJVEE9y9E1mhX4Mx+cNziQndkjgfK9UyRJstvuC8QTKtFZfuvOSIgzc1rouUDfiLUTMDnLzKmkJkxdnLmD0xkL/JTHuDlhIbTcD9pR4a4reXHSXXvY5jH5R47HfL73GBWFWvHhTy/IJ8rOdiuVI2ne4tn9bIG6B0wYKuizMT0HylEDofnROjF62WW1XQbeEn/9dXGTUdbM2/QuHYMoZJV6cRKOEg2olMND3KoMFcX77r2upTdnGLU+sg1dDIDbrzvLriLdHvlmO2M1MajEvooTZYAKSPo9zz1NuwmZzNVIZ2eVEHHT9h9KeZax5HRS1pFl2ZL0QaNFDp0mf1JHpRChHxkdvzdNvBBcXVEuEUA76w205LPglMmGg4+G7ydIcBkVCBatzlMkhKqsAkfdyG9+1ZMhwqzkFvjUooOQwbspn3nrRig/QUQDlYfpMz+E=
+jobs:
+    include:
+        - stage: "Tests"
+          name: "Unit"
+          script: npm run unit
+        - name: "End-to-end"
+          script: npm run e2e

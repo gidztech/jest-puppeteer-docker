@@ -4,7 +4,9 @@
     "description": "Jest plugin that allows you to run your Jest tests against a Chrome instance running in Docker.",
     "main": "lib/index.js",
     "scripts": {
-        "test": "jest",
+        "test": "npm run unit && npm run e2e",
+        "unit": "jest -c src/tests/jest.config.js",
+        "e2e": "cross-env process.env.JEST_PUPPETEER_CONFIG=example/jest-puppeteer.config.js jest panel.test.js -c example/jest.config.js",
         "lint": "eslint **/*.js --fix --ignore-pattern node_modules",
         "prettier": "prettier --write --single-quote --tab-width=4 */**.js",
         "precommit": "lint-staged"
@@ -26,6 +28,7 @@
     },
     "homepage": "https://github.com/gidztech/jest-puppeteer-docker#readme",
     "devDependencies": {
+        "cross-env": "^5.2.0",
         "eslint": "^5.2.0",
         "eslint-config-prettier": "^2.9.0",
         "eslint-plugin-prettier": "^2.6.2",
@@ -35,6 +38,7 @@
         "jest-html-reporter": "^2.4.2",
         "jest-image-snapshot": "^2.7.0",
         "lint-staged": "^7.2.0",
+        "mock-require": "^3.0.2",
         "prettier": "^1.13.7",
         "puppeteer": "^1.10.0",
         "puppeteer-extensions": "^1.0.0"
