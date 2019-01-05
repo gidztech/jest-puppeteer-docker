@@ -10,7 +10,7 @@ module.exports = {
         [
             '../node_modules/jest-html-reporter',
             {
-                outputPath: './report/summary.html',
+                outputPath: './example/report/summary.html',
                 pageTitle: 'Component test results',
                 includeFailureMsg: true,
                 customScriptPath: './inject-fail-images.js'
