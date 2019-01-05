@@ -1,4 +1,4 @@
-const getConfig = require('./lib/config');
+const getConfig = require('../../../lib/config');
 
 const baseConfig = getConfig();
 const customConfig = Object.assign({}, baseConfig);
