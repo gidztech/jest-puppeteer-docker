@@ -104,7 +104,7 @@ The main benefit of using Docker here is to support [Visual Regression Testing](
 [`jest-image-snapshot`](https://github.com/americanexpress/jest-image-snapshot) is a plugin that you can install, which will compare a screenshot with a baseline image that was previously generated when the test executed for the first time.
 
 ```js
-it("title and body appear correctly", async () => {
+it("should position the title and body correctly", async () => {
     const element = await global.page.$(".my-element");
     const image = await element.screenshot();
     expect(image).toMatchImageSnapshot();
@@ -139,7 +139,7 @@ expect.extend({ toMatchImageSnapshot });
 
 ### Example Result
 
-![Example Result](https://i.imgur.com/4ltspCN.png)
+![Example Result](https://i.imgur.com/jtfBs7g.png)
 
 ## Advanced Config
 
