@@ -8,7 +8,7 @@ describe('Panel tests', async () => {
         const panelTitle = '.first-usage .panel-title';
         const panelBody = '.first-usage .panel-body';
 
-        it('title and body exist', async () => {
+        it('should have a title and body', async () => {
             await page.waitForSelector(panelTitle);
             const titleText = await extensions.getText(panelTitle);
             expect(titleText).toContain('My title');
@@ -18,7 +18,7 @@ describe('Panel tests', async () => {
             expect(bodyText).toContain('This is some test data');
         });
 
-        it('title and body appear correctly', async () => {
+        it('should position the title and body correctly', async () => {
             await visualCheck(panelContainer);
         });
     });
@@ -28,7 +28,7 @@ describe('Panel tests', async () => {
         const panelTitle = '.second-usage .panel-title';
         const panelBody = '.second-usage .panel-body';
 
-        it('title, body and icon exist', async () => {
+        it('should have a title, body and icon', async () => {
             await page.waitForSelector(panelTitle);
             const titleText = await extensions.getText(panelTitle);
             expect(titleText).toContain('My title');
@@ -38,7 +38,7 @@ describe('Panel tests', async () => {
             expect(bodyText).toContain('This is a little bit more test data');
         });
 
-        it('title, body and icon appear correctly', async () => {
+        it('should position the title, body and icon correctly', async () => {
             await visualCheck(panelContainer);
         });
     });
