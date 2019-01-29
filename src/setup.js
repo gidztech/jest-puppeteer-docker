@@ -50,7 +50,7 @@ const { chromiumFlags } = require(path.resolve(
 // jest-puppeteer to re-use this require from cache because at this point in time, we don't have the web socket written.
 delete require.cache[path.resolve(process.env.JEST_PUPPETEER_CONFIG)];
 
-module.exports = async () => {
+module.exports = async jestConfig => {
     console.log('\n');
 
     const revision =
@@ -66,5 +66,5 @@ module.exports = async () => {
     const webSocketUri = await dockerRunChromium();
     fs.writeFileSync(endpointPath, webSocketUri);
 
-    await setupPuppeteer();
+    await setupPuppeteer(jestConfig);
 };
