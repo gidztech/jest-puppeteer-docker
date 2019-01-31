@@ -1,9 +1,9 @@
 const fs = require('fs');
 const { teardown: teardownPuppeteer } = require('../lib/index');
 
-module.exports = async function globalTeardown() {
+module.exports = async function globalTeardown(jestConfig) {
     global.__SERVER__.close();
-    await teardownPuppeteer();
+    await teardownPuppeteer(jestConfig);
 
     console.log(__dirname);
     fs.copyFileSync(

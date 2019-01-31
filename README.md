@@ -159,9 +159,9 @@ module.exports = {
 ```js
 const { setup: setupPuppeteer } = require("jest-puppeteer-docker");
 
-module.exports = async () => {
+module.exports = async jestConfig => {
     // any stuff you need to do can go here
-    await setupPuppeteer();
+    await setupPuppeteer(jestConfig);
 };
 ```
 
@@ -170,8 +170,8 @@ module.exports = async () => {
 ```js
 const { teardown: teardownPuppeteer } = require("jest-puppeteer-docker");
 
-module.exports = async () => {
-    await teardownPuppeteer();
+module.exports = async jestConfig => {
+    await teardownPuppeteer(jestConfig);
     // any stuff you need to do can go here
 };
 ```
