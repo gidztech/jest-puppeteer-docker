@@ -3,8 +3,8 @@ const fs = require('fs');
 const { teardown: teardownPuppeteer } = require('jest-environment-puppeteer');
 const { dockerShutdownChromium } = require('docker-chromium');
 
-module.exports = async function globalTeardown() {
-    await teardownPuppeteer();
+module.exports = async function globalTeardown(jestConfig) {
+    await teardownPuppeteer(jestConfig);
 
     // shut down Docker container
     await dockerShutdownChromium();
