@@ -11,5 +11,5 @@ module.exports = async function globalTeardown(jestConfig) {
 
     // delete websocket from file for next time we run test suites
     const endpointPath = path.join(__dirname, '../', 'wsEndpoint');
-    fs.writeFileSync(endpointPath, '');
+    fs.writeFileSync(endpointPath, '', { encoding: 'utf8' });
 };
