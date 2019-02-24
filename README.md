@@ -91,7 +91,7 @@ For example, if you have a server running at `http://localhost:3000`, you can do
 await page.goto("http://host.docker.internal:3000/my-page");
 ```
 
-If for any reason this doesn't work for you, please [create an issue](https://github.com/gidztech/jest-puppeteer-docker/issues/new).
+If for any reason this doesn't work for you, check the [Troubleshooting](https://github.com/gidztech/jest-puppeteer-docker/blob/master/README.md#troubleshooting) section, or [create an issue](https://github.com/gidztech/jest-puppeteer-docker/issues/new).
 
 ## Visual Regression Testing
 
@@ -177,3 +177,17 @@ module.exports = async jestConfig => {
 ```
 
 Check out the [example in this repository](https://github.com/gidztech/jest-puppeteer-docker/tree/master/example) for an end-to-end example with reporting.
+
+## Troubleshooting
+
+### CircleCI
+
+When configuring CircleCI, we need to enable the remote Docker engine to be able to run Docker Compose commands for building the Chrome container. This is achieved by adding the `setup_remote_docker` build step.
+
+However, the job that runs in the base container is on a separate environment from the remote Docker engine (for security reasons). This means the remote container cannot access network resources from the base container, and is a problem for us. You can read more about [Running Docker commands](https://circleci.com/docs/2.0/building-docker-images/#separation-of-environments).
+
+In order to get around this, we can use `machine` executor instead of the Docker one. This comes with Docker Compose installed, allowing us to interact with the container over the same network.
+
+Checkout the example [CircleCI config](https://github.com/gidztech/jest-puppeteer-docker/tree/master/example/ci/.circleci/config.yml).
+
+If you have a better solution than this, please let me know as I don't know CircleCI very well.
