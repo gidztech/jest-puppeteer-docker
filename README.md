@@ -188,6 +188,6 @@ However, the job that runs in the base container is on a separate environment fr
 
 In order to get around this, we can use `machine` executor instead of the Docker one. This comes with Docker Compose installed, allowing us to interact with the container over the same network.
 
-Checkout the example [CircleCI config](https://github.com/gidztech/jest-puppeteer-docker/tree/master/example/ci/.circleci/config.yml).
+Checkout the example [CircleCI config](https://github.com/gidztech/jest-puppeteer-docker/tree/master/example/ci/.circleci/config.yml). It's worth noting that we need to set the NVM environment variable for every task because it gets reset, which is rather annoying.
 
 If you have a better solution than this, please let me know as I don't know CircleCI very well.
