@@ -2,7 +2,7 @@
 
 module.exports = {
     preset: '<rootDir>../',
-    setupTestFrameworkScriptFile: './test-environment-setup.js',
+    setupFilesAfterEnv: ['./test-environment-setup.js'],
     globalSetup: './setup.js',
     globalTeardown: './teardown.js',
     reporters: [

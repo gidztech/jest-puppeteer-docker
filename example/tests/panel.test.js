@@ -1,9 +1,9 @@
-describe('Panel tests', async () => {
+describe('Panel tests', () => {
     beforeAll(async () => {
         await runSetup();
     });
 
-    describe('Simple mode', async () => {
+    describe('Simple mode', () => {
         const panelContainer = '.first-usage .panel';
         const panelTitle = '.first-usage .panel-title';
         const panelBody = '.first-usage .panel-body';
