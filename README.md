@@ -113,14 +113,14 @@ it("should position the title and body correctly", async () => {
 
 ### Example Config
 
-Before tests execute, we can configure `jest-image-snapshot` globally with a threshold value, among other options, using the [`setupTestFrameworkScriptFile`](https://jestjs.io/docs/en/configuration.html#setuptestframeworkscriptfile-string) hook provided by Jest.
+Before tests execute, we can configure `jest-image-snapshot` globally with a threshold value, among other options, using the [`setupFilesAfterEnv`](https://jestjs.io/docs/en/configuration#setupfilesafterenv-array) hook provided by Jest.
 
 **jest.config.js**
 
 ```js
 module.exports = {
     preset: "jest-puppeteer-docker",
-    setupTestFrameworkScriptFile: "./test-environment-setup.js"
+    setupFilesAfterEnv: ["./test-environment-setup.js"]
 };
 ```
 
@@ -150,7 +150,7 @@ module.exports = {
     preset: "jest-puppeteer-docker",
     globalSetup: "./setup.js",
     globalTeardown: "./teardown.js",
-    setupTestFrameworkScriptFile: "./test-environment-setup.js"
+    setupFilesAfterEnv: ["./test-environment-setup.js"]
 };
 ```
 
