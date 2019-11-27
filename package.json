@@ -44,7 +44,7 @@
         "puppeteer-extensions": "^1.0.0"
     },
     "dependencies": {
-        "docker-chromium": "^1.0.0",
+        "docker-chromium": "^1.1.0",
         "find-node-modules": "^2.0.0",
         "jest-puppeteer": "^4.1.0"
     }
