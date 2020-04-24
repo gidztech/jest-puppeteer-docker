@@ -1,6 +1,6 @@
 # jest-puppeteer-docker
 
-[![Build Status](https://travis-ci.org/gidztech/jest-puppeteer-docker.svg?branch=master)](https://travis-ci.org/gidztech/jest-puppeteer-docker)
+![Tests](https://github.com/gidztech/jest-puppeteer-docker/workflows/Tests/badge.svg)
 **Jest preset plugin that allows you to run your tests against a Chromium instance running in Docker**
 
 [![NPM](https://nodei.co/npm/jest-puppeteer-docker.png)](https://www.npmjs.com/package/jest-puppeteer-docker)
