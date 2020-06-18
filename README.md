@@ -31,20 +31,20 @@ npm install --save-dev jest-puppeteer-docker puppeteer jest
 
 ```js
 module.exports = {
-    preset: "jest-puppeteer-docker"
+    preset: 'jest-puppeteer-docker'
 };
 ```
 
 Use Puppeteer in your tests:
 
 ```js
-describe("Google", () => {
+describe('Google', () => {
     beforeAll(async () => {
-        await page.goto("https://google.com");
+        await page.goto('https://google.com');
     });
 
     it('should display "google" text on page', async () => {
-        await expect(page).toMatch("google");
+        await expect(page).toMatch('google');
     });
 });
 ```
@@ -53,12 +53,12 @@ describe("Google", () => {
 
 By default, Jest Puppeteer is configured by this library to connect to Chromium in the Docker container instead of launching it on the host machine. You may wish to add additional configuration, as per the [puppeteer.connect](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerconnectoptions) options. You can add a `jest-puppeteer.config.js` in your package root, or reference a custom location by setting `process.env.JEST_PUPPETEER_CONFIG`.
 
-Additionally, you can pass in [Chromium flags](https://peter.sh/experiments/chromium-command-line-switches/) to modify your launch criteria by providing a `chromiumFlags` array.
+Additionally, you can pass in [Chromium flags](https://peter.sh/experiments/chromium-command-line-switches/) to modify your launch criteria by providing a `chromiumFlags` array as well as other [Docker Chromium arguments](https://github.com/gidztech/docker-chromium/blob/master/README.md#api).
 
 **jest-puppeteer.config.js**
 
 ```js
-const getConfig = require("jest-puppeteer-docker/lib/config");
+const getConfig = require('jest-puppeteer-docker/lib/config');
 
 const baseConfig = getConfig();
 const customConfig = Object.assign({}, baseConfig);
@@ -68,7 +68,7 @@ customConfig.connect.defaultViewport = {
     height: 500
 };
 
-customConfig.chromiumFlags = ["–ignore-certificate-errors"];
+customConfig.chromiumFlags = ['–ignore-certificate-errors'];
 
 module.exports = customConfig;
 ```
@@ -88,7 +88,7 @@ If you are running a web server on your host environment, you should be able to 
 For example, if you have a server running at `http://localhost:3000`, you can do the following in your test:
 
 ```js
-await page.goto("http://host.docker.internal:3000/my-page");
+await page.goto('http://host.docker.internal:3000/my-page');
 ```
 
 If for any reason this doesn't work for you, check the [Troubleshooting](https://github.com/gidztech/jest-puppeteer-docker/blob/master/README.md#troubleshooting) section, or [create an issue](https://github.com/gidztech/jest-puppeteer-docker/issues/new).
@@ -104,8 +104,8 @@ The main benefit of using Docker here is to support [Visual Regression Testing](
 [`jest-image-snapshot`](https://github.com/americanexpress/jest-image-snapshot) is a plugin that you can install, which will compare a screenshot with a baseline image that was previously generated when the test executed for the first time.
 
 ```js
-it("should position the title and body correctly", async () => {
-    const element = await global.page.$(".my-element");
+it('should position the title and body correctly', async () => {
+    const element = await global.page.$('.my-element');
     const image = await element.screenshot();
     expect(image).toMatchImageSnapshot();
 });
@@ -119,19 +119,19 @@ Before tests execute, we can configure `jest-image-snapshot` globally with a thr
 
 ```js
 module.exports = {
-    preset: "jest-puppeteer-docker",
-    setupFilesAfterEnv: ["./test-environment-setup.js"]
+    preset: 'jest-puppeteer-docker',
+    setupFilesAfterEnv: ['./test-environment-setup.js']
 };
 ```
 
 **test-environment.setup.js**
 
 ```js
-const { configureToMatchImageSnapshot } = require("jest-image-snapshot");
+const { configureToMatchImageSnapshot } = require('jest-image-snapshot');
 
 const toMatchImageSnapshot = configureToMatchImageSnapshot({
-    failureThreshold: "0.01",
-    failureThresholdType: "percent"
+    failureThreshold: '0.01',
+    failureThresholdType: 'percent'
 });
 
 expect.extend({ toMatchImageSnapshot });
@@ -147,17 +147,17 @@ As per standard Jest configuration, we can provide a [`globalSetup`](https://jes
 
 ```js
 module.exports = {
-    preset: "jest-puppeteer-docker",
-    globalSetup: "./setup.js",
-    globalTeardown: "./teardown.js",
-    setupFilesAfterEnv: ["./test-environment-setup.js"]
+    preset: 'jest-puppeteer-docker',
+    globalSetup: './setup.js',
+    globalTeardown: './teardown.js',
+    setupFilesAfterEnv: ['./test-environment-setup.js']
 };
 ```
 
 **setup.js**
 
 ```js
-const { setup: setupPuppeteer } = require("jest-puppeteer-docker");
+const { setup: setupPuppeteer } = require('jest-puppeteer-docker');
 
 module.exports = async jestConfig => {
     // any stuff you need to do can go here
@@ -168,7 +168,7 @@ module.exports = async jestConfig => {
 **teardown.js**
 
 ```js
-const { teardown: teardownPuppeteer } = require("jest-puppeteer-docker");
+const { teardown: teardownPuppeteer } = require('jest-puppeteer-docker');
 
 module.exports = async jestConfig => {
     await teardownPuppeteer(jestConfig);

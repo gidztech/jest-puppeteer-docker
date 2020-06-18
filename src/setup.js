@@ -42,9 +42,11 @@ if (!process.env.JEST_PUPPETEER_CONFIG) {
     }
 }
 
-const { chromiumFlags } = require(path.resolve(
-    process.env.JEST_PUPPETEER_CONFIG
-));
+const {
+    chromiumFlags,
+    downloadHost,
+    useClosestUbuntuMirror
+} = require(path.resolve(process.env.JEST_PUPPETEER_CONFIG));
 
 // we needed chrome args property from the jest-puppeteer.config.js file but we don't want
 // jest-puppeteer to re-use this require from cache because at this point in time, we don't have the web socket written.
@@ -59,7 +61,12 @@ module.exports = async jestConfig => {
         require(path.resolve(puppeteerConfigPath)).puppeteer.chromium_revision;
 
     // set the version of Chromium to use based on Puppeteer
-    await dockerSetChromiumConfig({ revision, flags: chromiumFlags });
+    await dockerSetChromiumConfig({
+        revision,
+        flags: chromiumFlags,
+        downloadHost,
+        useClosestUbuntuMirror
+    });
 
     // launch Chromium in Docker ready for the first test suite
     const endpointPath = path.join(__dirname, '../', 'wsEndpoint');
