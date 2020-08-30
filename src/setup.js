@@ -7,19 +7,7 @@ const {
     dockerSetChromiumConfig,
     dockerRunChromium
 } = require('docker-chromium');
-
-const getFullPuppeteerConfigPath = p => {
-    return path.join(p, 'puppeteer', 'package.json');
-};
-
-const nodeModulePathWithPuppeteerConfig = nodeModulePaths.find(p => {
-    const pathToTest = getFullPuppeteerConfigPath(p);
-    return fs.existsSync(pathToTest);
-});
-
-const puppeteerConfigPath = getFullPuppeteerConfigPath(
-    nodeModulePathWithPuppeteerConfig
-);
+const { getChromiumRevision } = require('./puppeteer');
 
 // if user hasn't specified a custom jest puppeteer config path,
 // we will look for a config at their package root,
@@ -55,10 +43,7 @@ delete require.cache[path.resolve(process.env.JEST_PUPPETEER_CONFIG)];
 module.exports = async jestConfig => {
     console.log('\n');
 
-    const revision =
-        process.env.PUPPETEER_CHROMIUM_REVISION ||
-        process.env.npm_config_puppeteer_chromium_revision ||
-        require(path.resolve(puppeteerConfigPath)).puppeteer.chromium_revision;
+    const revision = getChromiumRevision();
 
     // set the version of Chromium to use based on Puppeteer
     await dockerSetChromiumConfig({
